@@ -1,0 +1,12 @@
+     // Creating the road (plane)
+    //  const roadTextureLoader = new THREE.TextureLoader();
+    //     const roadTexture = roadTextureLoader.load('/assets/wood.jpg');
+    //     roadTexture.wrapS = THREE.RepeatWrapping;
+    //     roadTexture.wrapT = THREE.RepeatWrapping;
+    //     roadTexture.repeat.set(4, 4);
+    //     const roadMaterial = new THREE.MeshBasicMaterial({ map: roadTexture });
+    //     const roadGeometry = new THREE.PlaneGeometry(20, 20);
+    //     const road = new THREE.Mesh(roadGeometry, roadMaterial);
+    //     road.rotation.x = -Math.PI / 2;
+    //     road.position.set(0, -2, 0);
+    //     scene.add(road);
