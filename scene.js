@@ -5,12 +5,12 @@ const init = () => {
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(
-    75,
+    45,
     window.innerWidth / window.innerHeight,
     0.1,
     1000
   );
-  camera.position.set(0, 2, 24);
+  camera.position.set(0, 2, 35);
   camera.lookAt(2, 2, 0);
 
   const renderer = new THREE.WebGLRenderer();
@@ -21,7 +21,7 @@ const init = () => {
   const controls = new THREE.OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
   controls.minDistance = 2; 
-  controls.maxDistance = 20; 
+  controls.maxDistance = 40; 
   controls.dampingFactor = 0.05; 
 
 
