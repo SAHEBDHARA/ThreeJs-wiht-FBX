@@ -10,7 +10,7 @@ const init = () => {
     0.1,
     1000
   );
-  camera.position.set(0, 2, 35);
+  camera.position.set(0, 2, 5);
   camera.lookAt(2, 2, 0);
 
   const renderer = new THREE.WebGLRenderer();
@@ -34,7 +34,7 @@ const init = () => {
   let model;
 
   loader.load(
-    "/assets/room.fbx",
+    "/assets/man.fbx",
     (fbx) => {
       model = fbx;
       model.scale.set(0.02, 0.02, 0.02);
