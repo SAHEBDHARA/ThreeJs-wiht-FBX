@@ -1,6 +1,3 @@
-// scene.js
-// import { RoomEnvironment } from 'https://unpkg.com/three@0.122.0/examples/jsm/environments/RoomEnvironment.js';
-
 const init = () => {
   const container = document.createElement("div");
   document.body.appendChild(container);
@@ -14,87 +11,116 @@ const init = () => {
   );
 
   camera.position.set(0, 0, 40);
-
-  camera.lookAt(2, 2, 0);
+  camera.lookAt(0, -10, 0);
 
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setPixelRatio(window.devicePixelRatio);
   renderer.setSize(window.innerWidth, window.innerHeight);
-  // renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.setClearColor(0xbfe3ed);
+  renderer.setClearColor(0xc2c2c2);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1;
   container.appendChild(renderer.domElement);
 
-  // const environment = new RoomEnvironment(renderer);
-  const pmremGenerator = new THREE.PMREMGenerator(renderer);
-
   const controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.enableZoom = false; 
   controls.enableDamping = true;
-  controls.minDistance = 10;
-  controls.maxDistance = 60;
   controls.dampingFactor = 0.05;
-  controls.target.set( 0, 0.35, 0 );
+  controls.target.set(0, 0.35, 0);
   controls.update();
 
+  const ambientLight = new THREE.AmbientLight(0xffffff, 6);
+  scene.add(ambientLight);
 
-  const light = new THREE.HemisphereLight(0xffffff, 0x080820, 1);
-scene.add(light);
-
-
-  // adding texture 
-
-
-  // Createing loader for fbx
   const loader = new THREE.FBXLoader();
   let model;
+  
+
+
 
   loader.load(
     "/assets/P3_Typ1 (1).fbx",
     (fbx) => {
       model = fbx;
+      const specificMesh = model.children[0];
+      const textureLoader = new THREE.TextureLoader();
+
+
+      textureLoader.load("/assets/img2.jpeg", (texture) => {
+        const material = new THREE.MeshBasicMaterial({ map: texture });
+        specificMesh.material = material;
+        texture.repeat.set(1.5 , 1.8);
+        texture.offset.set(1.04, 1.3);
+        texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+        // texture.wrapS = THREE.ClampToEdgeWrapping;
+      // texture.wrapT = THREE.ClampToEdgeWrapping;
+
+
+
+        // let zoomLevel = 1;
+        // const updateTextureZoom = () => {
+        //   texture.repeat.set(zoomLevel, zoomLevel);
+        //   renderer.render(scene, camera);
+        // };
+        // window.addEventListener("wheel", (event) => {
+        //   if (event.deltaY > 0) {
+        //     zoomLevel += 0.1; // You can adjust the zoom increment
+        //   } else {
+        //     zoomLevel -= 0.1; // You can adjust the zoom increment
+        //   }
+        //   updateTextureZoom();
+        // });
+        // updateTextureZoom(); 
+  
+
+
+
+
+        renderer.render(scene, camera);
+      });
+
+      const gui = new dat.GUI();
+
+      // Define function for model position
+      const changeModelPosition = (x, y, z) => {
+        model.position.set(x, y, z);
+        renderer.render(scene, camera);
+      };
+
+      // Define controls for model position
+      const positionControls = {
+        x: 0,
+        y: -10,
+        z: 0,
+      };
+
+      // Change the label to be more descriptive
+      const positionFolder = gui.addFolder("Model Position");
+      positionFolder.add(positionControls, "x", -50, 50).onChange(() => {
+        changeModelPosition(
+          positionControls.x,
+          positionControls.y,
+          positionControls.z
+        );
+      });
+    
+
+     
+
       model.position.set(0, -10, 0);
       scene.add(model);
 
-      
-  const textureLoader = new THREE.TextureLoader();
-  const texture = textureLoader.load('/assets/wood.jpg'); 
-
-  const material = new THREE.MeshBasicMaterial({ map: texture });
-
-  model.traverse(function (child) {
-    if (child instanceof THREE.Mesh) {
-      child.material = material;
-    }
-  });
-
-      const gui = new dat.GUI();
-      const guiValues = {
-        zoom: 0,
-        lightIntensity: 5,
-      };
-      const modelSettings = {
-        positionX: 0,
-        positionY: -10,
-        positionZ: 0,
-       
-      };
-      gui.add(modelSettings, 'positionX', -10, 10).onChange((value) => {
-        model.position.x = value;
-      });
-      gui.add(modelSettings, 'positionY', -20, 0).onChange((value) => {
-        model.position.y = value;
-      });
-      gui.add(modelSettings, 'positionZ', -10, 10).onChange((value) => {
-        model.position.z = value;
-      });
-      gui.add(guiValues, 'zoom', 0, 100).name('Zoom').onChange(function(value) {
-        camera.position.z = value; // Adjust camera zoom
-      });
-      
-      gui.add(guiValues, 'lightIntensity', 0, 10).name('Light Intensity').onChange(function(value) {
-        // Adjust light intensity
-        hemiLight.intensity = value;
+      model.traverse((child) => {
+        if (child.isMesh) {
+          if (child.geometry.isBufferGeometry) {
+            child.geometry.computeVertexNormals();
+          } else {
+            const bufferGeometry = new THREE.BufferGeometry().fromGeometry(
+              child.geometry
+            );
+            bufferGeometry.computeVertexNormals();
+            child.geometry = bufferGeometry;
+          }
+        }
       });
 
       const animate = function () {
@@ -102,7 +128,6 @@ scene.add(light);
         controls.update();
         renderer.render(scene, camera);
       };
-
       animate();
     },
     undefined,
@@ -121,5 +146,3 @@ scene.add(light);
 };
 
 init();
-
-
