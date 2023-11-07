@@ -22,7 +22,6 @@ const init = () => {
   container.appendChild(renderer.domElement);
 
   const controls = new THREE.OrbitControls(camera, renderer.domElement);
-  controls.enableZoom = false; 
   controls.enableDamping = true;
   controls.dampingFactor = 0.05;
   controls.target.set(0, 0.35, 0);
@@ -33,9 +32,6 @@ const init = () => {
 
   const loader = new THREE.FBXLoader();
   let model;
-  
-
-
 
   loader.load(
     "/assets/P3_Typ1 (1).fbx",
@@ -44,37 +40,14 @@ const init = () => {
       const specificMesh = model.children[0];
       const textureLoader = new THREE.TextureLoader();
 
-
       textureLoader.load("/assets/img2.jpeg", (texture) => {
         const material = new THREE.MeshBasicMaterial({ map: texture });
         specificMesh.material = material;
-        texture.repeat.set(1.5 , 1.8);
-        texture.offset.set(1.04, 1.3);
+        texture.repeat.set(1.66, 1.66);
+        texture.offset.set(1.015 , 1.378  );
         texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-        // texture.wrapS = THREE.ClampToEdgeWrapping;
-      // texture.wrapT = THREE.ClampToEdgeWrapping;
 
-
-
-        // let zoomLevel = 1;
-        // const updateTextureZoom = () => {
-        //   texture.repeat.set(zoomLevel, zoomLevel);
-        //   renderer.render(scene, camera);
-        // };
-        // window.addEventListener("wheel", (event) => {
-        //   if (event.deltaY > 0) {
-        //     zoomLevel += 0.1; // You can adjust the zoom increment
-        //   } else {
-        //     zoomLevel -= 0.1; // You can adjust the zoom increment
-        //   }
-        //   updateTextureZoom();
-        // });
-        // updateTextureZoom(); 
   
-
-
-
-
         renderer.render(scene, camera);
       });
 
@@ -102,9 +75,6 @@ const init = () => {
           positionControls.z
         );
       });
-    
-
-     
 
       model.position.set(0, -10, 0);
       scene.add(model);
